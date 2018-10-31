@@ -8,13 +8,28 @@
 <header>
 
   <h2><i><b>tinyAPP</b></i></h2>
+  <!-- IF statement checks if user is logged in and if so displays the logout form -->
+  <% if (!username) { %>
+
+
+    <!-- login form -->
+    <form method="POST" action="/login">
+      <input type="text" name="username" value="Enter username">
+      <input type="submit" value="Login">
+    </form>
+
+  <% } else { %>
+
+    <!-- Pass in the username to all views that include the _header.ejs partial -->
+    <p> User:  <%= username %></p>
+
+    <!-- logout form -->
+    <form method="POST" action="/logout"><input type="submit" value="Logout"></form>
+
+  <% } %>
 
 </header>
 
-<form method="POST" action="/login">
-  <input type="text" name="username value="Enter username">
-  <input type="submit" value="Login">
-</form>
 
 
 </body>
