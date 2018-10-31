@@ -5,12 +5,22 @@
 </head>
 <body>
 
+<header>
+
 <% include ./partials/_header %>
 
+</header>
+
     <% for (const i in urls) { %>
-      <li>URL:   <%= urls[i] %>    URL Shortened:  <%= i %></li>
+
+      <p><%= urls[i] %>  <%= i %></p>
+      <!-- creates form for deleting URLS -->
+      <a href="/urls/<%= i %>">Edit URL</a>
+      <form method="POST" action="/urls/<%= i %>/delete"><input type="submit" value="Delete"></form>
+
     <% }; %>
 
     <p><a href='#'>Shorten URL</a></p>
+
 </body>
 </html>

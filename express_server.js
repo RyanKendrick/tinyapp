@@ -77,8 +77,21 @@ app.get("/urls/:id", (req, res) => {
 // GET route handler for shortURL requests
 app.get("/u/:shortURL", (req, res) => {
   let longURL = urlDatabase[req.params.shortURL];
-  res.redirect(longURL);
+  res.redirect('/urls');
 });
+
+// route for POST request for deleting URLS
+app.post("/urls/:id/delete", (req, res) => {
+  delete urlDatabase[req.params.id];
+  res.redirect('/urls');
+})
+
+// route for POST request for updating URLS:
+// replaces longURL with user's input in the form in urls_show.ejs
+app.post("/urls/:id/update", (req, res) => {
+  urlDatabase[req.params.id] = req.body.updateURL;
+  res.redirect('/urls');
+})
 
 // route that will match POST request (in urls_new) and handle it.
 // this POST route definition logs the request body and gives a dummy response ('Ok').
