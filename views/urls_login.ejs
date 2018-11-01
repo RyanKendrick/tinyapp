@@ -1,0 +1,39 @@
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>TinyApp</title>
+</head>
+<body>
+
+
+  <% if (!user) { %>
+
+
+    <!-- login form -->
+    <form method="POST" action="/login">
+      <input type="email" name="email"> EMAIL
+      <input type='password' name='password'> PASSWORD
+      <input type="submit" value="Login">
+    </form>
+
+  <% } else { %>
+
+    <!-- Pass in the username to all views that include the _header.ejs partial -->
+    <p> User:  <%= user.email %></p>
+
+    <!-- logout form -->
+    <form method="POST" action="/logout"><input type="submit" value="Logout"></form>
+
+  <% } %>
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
