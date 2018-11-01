@@ -9,8 +9,22 @@
 
   <h2><i><b>tinyAPP</b></i></h2>
 
-  <p><a href="http://localhost:8080/register"> REGISTER </a></p>
-  <p><a href="http://localhost:8080/login"> LOGIN </a></p>
+  <!-- if user is logged in display their username and logout button, if not, display REGISTER and LOGIN links -->
+  <% if (!user) { %>
+
+      <p><a href="http://localhost:8080/register"> REGISTER </a></p>
+      <p><a href="http://localhost:8080/login"> LOGIN </a></p>
+
+    <% } else { %>
+
+      <!-- Pass in the logged-in username to all views that include the _header.ejs partial -->
+      <p> User:  <%= user.email %></p>
+
+      <!-- logout form -->
+      <form method="POST" action="/logout"><input type="submit" value="Logout"></form>
+
+  <% } %>
+
 
 </header>
 
