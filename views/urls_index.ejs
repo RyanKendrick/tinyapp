@@ -11,12 +11,12 @@
 
 </header>
 
-    <% for (const i in urls) { %>
+    <% for (const key in urls) { %>
 
-      <p><%= urls[i].url %>  <%= i %></p>
+      <p><%= urls[key] %>  <%= key %></p>
       <!-- creates form for deleting URLS -->
-      <a href="/urls/<%= i %>">Edit URL</a>
-      <form method="POST" action="/urls/<%= i %>/delete"><input type="submit" value="Delete"></form>
+      <a href="/urls/<%= key %>">Edit URL</a>
+      <form method="POST" action="/urls/<%= key %>/delete"><input type="submit" value="Delete"></form>
 
     <% }; %>
 
