@@ -114,10 +114,7 @@ app.get("/urls/new", (req, res) => {
 
   let templateVars = { urls: urlDatabase,
                        user: users[req.session.user_id]};
-    if (!req.session.user_id) {
-    res.redirect('/login');
-    return;
-  };
+
   // gives /urls/new access to the logged-in username displayed in the header partial
   res.render("urls_new", templateVars);
 });
