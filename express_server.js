@@ -117,6 +117,10 @@ app.get("/urls/new", (req, res) => {
 // ":id" in "/urls/:id" indicates that the ID, or key,
 // of the url will be in that part of the URL.
 app.get("/urls/:id", (req, res) => {
+  if (!req.cookies.user_id) {
+    res.status(401).send("not for you!");
+    return;
+  };
   const key = req.params.id;
   // creates new object to pass to the template which
   // includes the short and long URLs
