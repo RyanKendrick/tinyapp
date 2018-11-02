@@ -193,6 +193,9 @@ app.post("/urls/new", (req, res) => {
   const shortURL = generateRandomString();
   let templateVars = { urls: urlDatabase,
                        user: users[req.session.user_id]};
+  if (!users[req.session.user_id]) {
+    return res.redirect('/login');
+  }
 
   // req.body = the long URL that was input
   // adds new entry to the database: set the key as a new
