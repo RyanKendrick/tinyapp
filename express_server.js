@@ -132,9 +132,10 @@ app.get("/urls/:id", (req, res) => {
 
 // GET route handler for shortURL requests
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL];
 
-  res.redirect('/urls');
+  let longURL = urlDatabase[req.params.shortURL].url;
+
+  res.redirect(longURL);
 });
 
 // GET /register endpoint, which returns a page that
