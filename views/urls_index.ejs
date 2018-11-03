@@ -14,7 +14,7 @@
     <% for (const key in urls) { %>
 
       <p><%= urls[key] %>  <%= key %></p>
-      <!-- creates form for deleting URLS -->
+
       <a href="/urls/<%= key %>">Edit URL</a>
       <form method="POST" action="/urls/<%= key %>/delete"><input type="submit" value="Delete"></form>
 

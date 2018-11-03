@@ -19,10 +19,10 @@
 
   <% } else { %>
 
-    <!-- Pass in the username to all views that include the _header.ejs partial -->
+
     <p> User:  <%= user.email %></p>
 
-    <!-- logout form -->
+
     <form method="POST" action="/logout"><input type="submit" value="Logout"></form>
 
   <% } %>

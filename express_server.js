@@ -17,11 +17,11 @@ app.use(cookieSession({
 }))
 
 function generateRandomString() {
-  var alphaNums = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  var alphaNumString = "";
+  const alphaNums = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let alphaNumString = "";
   // '6' sets string to 6 characters by calling function 6 times
   // and concatenating to alphNumString
-  for (var i = 0; i < 6; i++) {
+  for (let i = 0; i < 6; i++) {
     alphaNumString += alphaNums.charAt(Math.floor(Math.random() * alphaNums.length));
   }
 
@@ -29,7 +29,7 @@ function generateRandomString() {
 };
 
 // database object containing short and long URLS
-var urlDatabase = {
+const urlDatabase = {
   "b2xVn2": {url: "http://www.lighthouselabs.ca", userID: 'userRandomId'},
   "9sm5xK": {url: "http://www.google.com", userID: 'userRandomId'}
 };
@@ -76,8 +76,7 @@ app.get("/", (req, res) => {
 
 // route handler for "/urls" uses res.render() to pass the URL data to your template
 app.get("/urls", (req, res) => {
-  // When sending variables to an EJS template,
-  // you need to send them inside an object,
+  // variables sent an EJS template, need to be inside an object,
   // even if you are only sending one variable.
   // This is so you can use the key of that variable
   // to access the data within your template
@@ -105,11 +104,7 @@ app.get("/hello", (req, res) => {
 
 // GET route to render the urls_new.ejs template
 // in the browser, to present the form to the user
-// The GET /urls/new route is defined before the GET /urls/:id route because
-// Routes defined earlier will take precedence, and the path /urls/new actually
-// matches the /urls/:id pattern (with the :id placeholder matching the
-// string "new" instead of an actual id.
-// So, in case of overlap, routes should be ordered from most specific to least specific.
+// routes ordered from most specific to least specific.
 app.get("/urls/new", (req, res) => {
 
   let templateVars = { urls: urlDatabase,
@@ -188,7 +183,7 @@ app.post("/urls/:id/update", (req, res) => {
 app.post("/urls/new", (req, res) => {
   const longURL = req.body.longURL
   const shortURL = generateRandomString();
-  let templateVars = { urls: urlDatabase,
+  const templateVars = { urls: urlDatabase,
                        user: users[req.session.user_id]};
   if (!users[req.session.user_id]) {
     return res.redirect('/login');
@@ -208,13 +203,12 @@ app.post("/urls/new", (req, res) => {
 
 // POST route for login - sets cookie to username
 app.post("/login", (req, res) => {
-  for (var userId in users) {
+  for (let userId in users) {
 
     // finds a user that matches the email submitted via the login form
     // and compares user password with the password entered in the form
     if (users[userId].email === req.body.email && bcrypt.compareSync(req.body.password, users[userId].password)) {
-        // set the user_id cookie with the matching user's random ID, then redirect to '/''
-        //
+        // set the user_id cookie with the matching user's random ID, then redirect to '/'
         req.session.user_id = userId;
         res.redirect('/urls');
         return;
@@ -226,47 +220,51 @@ app.post("/login", (req, res) => {
 
 // POST route for logout form
 app.post("/logout", (req, res) => {
-  // clears/delete user's login cookie and redirects to /urls
+  // clears/deletes user's login cookie and redirects to /urls
   req.session = null;
   res.redirect("/urls");
 });
 
-// adds a new user object in the global users object
-// which keeps track of the newly registered user's
-// email, password and user ID.
+let retrieveUser = function(email) {
+  for (let userId in users) {
+    if (email === users[userId]['email']) {
+      return users[userId];
+    }
+  }
+  return false;
+};
+
 app.post('/register', (req, res) => {
   let userRandomId = generateRandomString();
+  let userEmail = req.body.email;
   // checks if an email (req.body.email)
   // or password (req.body.password) has been entered into the form
   // and if not responds with 400 status code
   if (!req.body.email || !req.body.password) {
     res.status(400);
     res.send("Enter an email and password")
-  } else {
-    // loops through users object, checks if form email
-    // input matches any already in the users object
-    // and if so responds with 400 status code
-    for (var userId in users) {
-      if (req.body.email === users[userId]['email']) {
-        res.status(400);
-        res.send('email already exists!');
-        // only need to include 'return' to invoke the if statement
-        return;
-      }
-    }
-  }
-  // adds new users object to the global 'users' object
-  users[userRandomId] = {
-    id: userRandomId,
-    // request body of email and password fields in
-    // urls_user_registration form and sets them as user's information
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 10) // bcrypt hashsync hashes the password upon registration
-  };
 
-  // Sets a 'user_id' cookie containing the user's (newly generated) ID.
-  req.session.user_id = userRandomId;
-  res.redirect('/urls');
+  } else if (retrieveUser(userEmail)) {
+    res.status(400);
+    res.send('email already exists!');
+
+
+
+  } else {
+    // adds new users object to the global 'users' object
+    users[userRandomId] = {
+      id: userRandomId,
+      // request body of email and password fields in
+      // urls_user_registration form and sets them as user's information
+      email: req.body.email,
+      password: bcrypt.hashSync(req.body.password, 10) // bcrypt hashsync hashes the password upon registration
+    }
+
+    // Sets a 'user_id' cookie containing the user's (newly generated) ID.
+    req.session.user_id = userRandomId;
+    res.redirect('/urls');
+  }
+
 });
 
 app.listen(PORT, () => {
